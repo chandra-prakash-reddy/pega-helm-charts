@@ -17,7 +17,7 @@ export INSTALLER_CONFIGURATIONS_FILE_NAME=installer-config-${CHART_VERSION}.tgz
 curl -o index.yaml https://chandra-prakash-reddy.github.io/pega-helm-charts/index.yaml
 # Clone the versions from gh-pages to a temp directory - xyz
 # The versions will be re-installed in temporary directory - temp_gh_pages
-git clone --single-branch --branch gh-pages https://chandra-prakash-reddy.github.io/${GITHUB_REPOSITORY} temp_gh_pages
+git clone --single-branch --branch gh-pages https://github.com/${GITHUB_REPOSITORY} temp_gh_pages
 cp temp_gh_pages/*.tgz .
 rm -rf temp_gh_pages
 ls
