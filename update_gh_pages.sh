@@ -7,7 +7,8 @@ echo "${GITHUB_ACTOR}"
 
 repo_uri="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 remote_name="origin"
-target_branch="gh_pages"
+main_branch="master"
+target_branch="gh-pages"
 tmp_build_dir="/tmp/build_dir"
 
 cd "$GITHUB_WORKSPACE"
@@ -16,7 +17,6 @@ git config --global user.name "$GITHUB_ACTOR"
 git config --global user.email "reddyp148@gmail.com"
 
 echo "Creating a temporary directory to build"
-rm -rf "$tmp_build_dir"
 mkdir -p "$tmp_build_dir"
 
 
@@ -28,7 +28,6 @@ cd "$tmp_build_dir"
 echo "Copying the files to the temporary build directory"
 rsync -rl --exclude .git --delete "$GITHUB_WORKSPACE/" .
 
-git restore linux-amd64/
 echo $(pwd)
 ls
 git branch
