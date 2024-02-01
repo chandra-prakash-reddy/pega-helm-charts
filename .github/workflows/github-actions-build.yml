@@ -186,6 +186,14 @@ jobs:
             pega-pivotal-pks-example.tar.gz
           token: ${{ secrets.GH_ACTIONS_SECRET }}
 
+      - name: sync chart version
+        run: |
+          cd $GITHUB_WORKSPACE
+          chmod 777 sync_chart_version.sh
+          ./sync_chart_version.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
+
       - name: deploy on github pages
         run: |
           cd $GITHUB_WORKSPACE
@@ -194,10 +202,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
 
-      - name: sync chart version
-        run: |
-          cd $GITHUB_WORKSPACE
-          chmod 777 sync_chart_version.sh
-          ./sync_chart_version.sh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_SECRET }}
