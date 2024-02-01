@@ -1,0 +1,64 @@
+{{- if .Values.enabled }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: constellation
+  labels:
+    app: constellation
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: constellation
+  template:
+    metadata:
+      labels:
+        app: constellation
+    spec:
+      {{- if .Values.customerAssetVolumeClaimName }}
+      volumes:
+        - name: constellation-appstatic-assets
+          persistentVolumeClaim:
+            claimName: {{ .Values.customerAssetVolumeClaimName }}
+      {{- end }}
+      imagePullSecrets:
+      - name: {{ template "pegaRegistrySecret" $ }}
+      {{ if .Values.imagePullSecretNames }}
+      {{- range .Values.imagePullSecretNames }}
+      - name: {{ . }}
+      {{- end }}
+      {{ end }}
+      containers:
+      - name: constellation
+        image: {{ .Values.docker.constellation.image }}
+        {{ if .Values.customerAssetVolumeClaimName }}
+        volumeMounts:
+         - name: constellation-appstatic-assets
+           mountPath: /usr/src/app/dist/customers
+        {{- end }}
+        args:
+        - port=3000
+        # constellation URL path, if you change it, you need to change ingress template files too
+        - urlPath=/c11n
+        - logLevel={{ .Values.logLevel }}
+        livenessProbe:
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          httpGet:
+            path: /c11n/buildInfo.json
+            port: 3000
+        readinessProbe:
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          httpGet:
+            path: /c11n/buildInfo.json
+            port: 3000
+        ports:
+        - containerPort: 3000
+{{ end }}
