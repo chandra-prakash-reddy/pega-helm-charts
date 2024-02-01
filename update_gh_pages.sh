@@ -7,7 +7,6 @@ echo "${GITHUB_ACTOR}"
 
 repo_uri="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 remote_name="origin"
-main_branch="master"
 target_branch="gh_pages"
 tmp_build_dir="/tmp/build_dir"
 
@@ -17,6 +16,7 @@ git config --global user.name "$GITHUB_ACTOR"
 git config --global user.email "reddyp148@gmail.com"
 
 echo "Creating a temporary directory to build"
+rm -rf "$tmp_build_dir"
 mkdir -p "$tmp_build_dir"
 
 
